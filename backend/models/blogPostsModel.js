@@ -133,5 +133,5 @@ module.exports = {
   getPostByPostId,
   getPublicPosts,
   searchPosts,
-  getUserPostsById
+  getUserPostsById,
 };

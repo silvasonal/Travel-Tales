@@ -334,6 +334,51 @@ body {
   color: white;
 }
 
+.filter-options {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 1rem;
+}
+.filter-options button {
+  padding: 6px 12px;
+  background-color: #eee;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.filter-options button.active {
+  background-color: #007bff;
+  color: white;
+}
+
+
+
+
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.pagination-controls button {
+  padding: 6px 12px;
+  margin: 0 5px;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.pagination-controls button:disabled {
+  background-color: #b0b0b0;
+  cursor: not-allowed;
+}
+
+
+
+
 
 
 

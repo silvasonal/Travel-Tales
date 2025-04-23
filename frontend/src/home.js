@@ -11,6 +11,8 @@ const Home = () => {
   const [posts, setPosts] = useState([]);
   const [userId, setUserId] = useState('');
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+  const [filterOption, setFilterOption] = useState('recent'); 
+  const [currentPage, setCurrentPage] = useState(1); //first page will be shown initially.
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -20,6 +22,13 @@ const Home = () => {
   const searchusername = queryParams.get('username');
   const searchcountry = queryParams.get('country');
 
+  const postsPerPage = 4; // Number of posts per page
+  const totalPages = Math.ceil(posts.length / postsPerPage); // Total number of pages based on posts length
+  const indexOfLastPost = currentPage * postsPerPage; // Index of the last post on the current page
+  const indexOfFirstPost = indexOfLastPost - postsPerPage; // Index of the first post on the current page
+  const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost); // Current posts to be displayed in the page
+
+
   useEffect(() => {
     if (token) {
       const decodedToken = jwtDecode(token);
@@ -27,38 +36,48 @@ const Home = () => {
     }
   }, [token]);
 
+ 
   useEffect(() => {
     fetchData();
-  }, [activeTab, userId, token, searchusername, searchcountry]);
+  }, [activeTab, userId, token, searchusername, searchcountry,filterOption]);
 
   const fetchData = async () => {
     try {
+      let fetchedPosts = [];
+  
       if (activeTab === 'public') {
         if (searchusername || searchcountry) {
           const response = await searchPosts({ username: searchusername, country: searchcountry });
-          setPosts(response.results);
-
+          fetchedPosts = response.results;
         } else {
           const response = await getPublicPosts();
-          setPosts(response.posts);
+          fetchedPosts = response.posts;
         }
-
-        
       } else if (activeTab === 'following' && userId) {
         if (searchusername || searchcountry) {
-          const response = await followingPostsBySearch(userId, token, {username: searchusername, country: searchcountry });
-          setPosts(response.posts);
-
+          const response = await followingPostsBySearch(userId, token, { username: searchusername, country: searchcountry });
+          fetchedPosts = response.posts;
         } else {
           const response = await getFollowedPosts(userId, token);
-          setPosts(response.posts);
+          fetchedPosts = response.posts;
         }
       }
+  
+      if (filterOption === "liked"){
+        fetchedPosts.sort((a,b) => (b.likes || 0) - (a.likes || 0));
+      }else {
+        fetchedPosts.sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+      }
+  
+      setPosts(fetchedPosts);
+      setCurrentPage(1); // Reset to the first page whenever posts change
+    
     } catch (error) {
       setPosts([]);
       console.error('Error fetching posts:', error);
     }
   };
+  
 
   const handleLike = async (postId) => {
     try {
@@ -109,9 +128,26 @@ const Home = () => {
         )}
       </div>
 
+      
+      <div className="filter-options">
+        <button
+          className={filterOption === 'recent' ? 'active' : ''}
+          onClick={() => setFilterOption('recent')}
+        >
+          Most Recent
+        </button>
+        <button
+          className={filterOption === 'liked' ? 'active' : ''}
+          onClick={() => setFilterOption('liked')}
+        >
+          Most Liked
+        </button>
+      </div>
+
+
       <div className="posts-container">
-        {posts.length > 0 ? (
-          posts.map((post) => (
+        {currentPosts.length > 0 ? (
+          currentPosts.map((post) => (
             <PostCard
               key={post.id}
               post={post}
@@ -128,6 +164,30 @@ const Home = () => {
           </div>
         )}
       </div>
+
+      {currentPosts.length > 0 && (
+        <div className="pagination-controls">
+          <button
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+          >
+            ◀ Previous
+          </button>
+
+            <span style={{ margin: '0 10px'}}>
+              Page {currentPage} of {totalPages}
+            </span>
+
+          <button
+            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+            disabled={currentPage === totalPages}
+          >
+            Next ▶
+          </button>
+        </div>
+       )}
+
+
       <SharedSnackbar snackbar={snackbar} setSnackbar={setSnackbar} />
     </div>
   );
