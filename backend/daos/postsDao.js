@@ -75,7 +75,6 @@ const getAllPublicPosts = async () => {
       JOIN users ON posts.user_id = users.id
       LEFT JOIN likes ON posts.id = likes.post_id
       GROUP BY posts.id, users.username
-      ORDER BY posts.created_at DESC
     `);
 
     return result.rows;
@@ -116,9 +115,7 @@ const searchBy = async (username, country) => {
     }
 
     query += `
-      GROUP BY posts.id, users.username
-      ORDER BY posts.created_at DESC
-      `;
+      GROUP BY posts.id, users.username`;
 
     const result = await pool.query(query, queryParams);
     return result.rows;
@@ -142,8 +139,7 @@ const getPostsById = async (userId) => {
       JOIN users ON posts.user_id = users.id
       LEFT JOIN likes ON posts.id = likes.post_id
       WHERE posts.user_id = $1
-      GROUP BY posts.id, users.username
-      ORDER BY posts.created_at DESC` ,
+      GROUP BY posts.id, users.username` ,
       [userId]
     );
 
@@ -156,4 +152,5 @@ const getPostsById = async (userId) => {
 };
 
 
-module.exports = { createBlogPost, updateBlogPost, deleteBlogPost,getPostByPostId, getAllPublicPosts, searchBy, getPostsById };
+
+module.exports = { createBlogPost, updateBlogPost, deleteBlogPost,getPostByPostId, getAllPublicPosts, searchBy, getPostsById};

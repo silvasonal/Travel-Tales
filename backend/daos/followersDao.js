@@ -76,8 +76,7 @@ const getFollowingPostsByUserIds = async (userIds) => {
      JOIN users ON posts.user_id = users.id
      LEFT JOIN likes ON posts.id = likes.post_id
      WHERE posts.user_id IN (${placeholders})
-     GROUP BY posts.id, users.username
-     ORDER BY posts.created_at DESC`,
+     GROUP BY posts.id, users.username`,
     userIds
   );
   return result.rows;
@@ -115,9 +114,7 @@ const searchByFollowingPosts = async (userIds, username, country) => {
     query += ` WHERE posts.user_id IN (${placeholders}) AND ` + conditions.join(' AND ');  }
 
   query += `
-    GROUP BY posts.id, users.username
-    ORDER BY posts.created_at DESC
-  `;
+    GROUP BY posts.id, users.username`;
 
     const result = await pool.query(query, queryParams);
     return result.rows;
@@ -127,7 +124,6 @@ const searchByFollowingPosts = async (userIds, username, country) => {
     throw error;
   }
 };
-
 
 
 module.exports = {
