@@ -15,24 +15,55 @@ const CreateBlog = () => {
     const [dateOfVisit, setDateOfVisit] = useState('');
     const [errors, setErrors] = useState({});
     const [countryCodes, setCountryCodes] = useState([]);
+    const [countryData, setCountryData] = useState(null);
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
     const { postId } = useParams();
     const token = localStorage.getItem('token');
 
+    useEffect(() => {
+        const getCountryData = async () => {
+            if (!country) return;
+
+            try {
+                const response = await axios.get('https://restcountries.com/v3.1/alpha/' + country);
+                const countryInfo = response.data[0];
+
+                const countryData = {
+                    capital: countryInfo.capital ? countryInfo.capital[0] : 'N/A',
+                    flag: countryInfo.flags?.svg || '',
+                    currency: countryInfo.currencies
+                        ? Object.keys(countryInfo.currencies).map(curr => ({
+                            code: curr,
+                            name: countryInfo.currencies[curr].name,
+                            symbol: countryInfo.currencies[curr].symbol,
+                        }))
+                        : [],
+                };
+                setCountryData(countryData);
+                return countryData;
+            } catch (error) {
+                console.error('Error fetching country data:', error);
+                return null;
+            }
+        };
+        getCountryData();
+    }, [country]);
+
+
 
     useEffect(() => {
         axios.get('https://restcountries.com/v3.1/all')
-          .then(response => {
-            const codes = response.data.map(country => ({
-              value: country.cca2,
-              label: country.name.common,
-            }));
-            setCountryCodes(codes);  
-          })
-          .catch(error => {
-            console.error('Error fetching country codes:', error);
-          });
+            .then(response => {
+                const codes = response.data.map(country => ({
+                    value: country.cca2,
+                    label: country.name.common,
+                }));
+                setCountryCodes(codes);
+            })
+            .catch(error => {
+                console.error('Error fetching country codes:', error);
+            });
     }, []);
 
     useEffect(() => {
@@ -44,10 +75,11 @@ const CreateBlog = () => {
             setContent('');
             setCountry('');
             setDateOfVisit('');
+            setCountryData(null);
             setErrors({});
         }
     }, [postId]);
-    
+
 
     const fetchUpdatedPostData = async () => {
         if (postId) {
@@ -59,7 +91,7 @@ const CreateBlog = () => {
             setDateOfVisit(post.date_of_visit);
         }
     };
-    
+
 
     const createBlogPost = async () => {
         const newErrors = {
@@ -78,21 +110,22 @@ const CreateBlog = () => {
             if (postId) {
                 await updatePost(postId, title, content, country, dateOfVisit, token);
                 setSnackbar({ open: true, message: 'Post updated successfully', severity: 'success' });
-                
+
             } else {
                 await createPost(title, content, country, dateOfVisit, token);
                 setSnackbar({ open: true, message: 'Post created successfully', severity: 'success' });
-        
+
                 setTitle('');
                 setContent('');
                 setCountry('');
                 setDateOfVisit('');
+                setCountryData(null);
                 setErrors({});
             }
         } catch (error) {
             console.error('Error while submitting post:', error);
             setSnackbar({ open: true, message: 'Failed to submit post', severity: 'error' });
-        }  
+        }
     };
 
     return (
@@ -138,9 +171,9 @@ const CreateBlog = () => {
                             label: country.label,
                         }))}
                         onChange={(selectedOption) => {
-                            setCountry(selectedOption.value); 
+                            setCountry(selectedOption.value);
                         }}
-                        value={country ? countryCodes.find(option => option.value === country) : null} 
+                        value={country ? countryCodes.find(option => option.value === country) : null}
                     />
                     {errors.country && (
                         <div className="error-message">
@@ -168,6 +201,40 @@ const CreateBlog = () => {
                     {postId ? 'Update' : 'Create'}
                 </button>
             </div>
+
+
+           {countryData && (
+                <div className="country-info-container">
+                    <h5 className="country-info-title">Country Information</h5>
+
+                    <div className="mb-2">
+                        <strong>Capital:</strong> <span className="country-info-text">{countryData.capital}</span>
+                    </div>
+
+                    {countryData.currency.length > 0 && (
+                        <div className="country-currency-info">
+                            <span className="country-currency-label">Currencies:</span>
+                            {countryData.currency.map((curr, index) => (
+                                <span key={index} className="country-currency-item">
+                                    {curr.code} - {curr.name} ({curr.symbol})
+                                </span>
+                            ))}
+                        </div>
+                    )}
+
+                    {countryData.flag && (
+                        <div>
+                            <img
+                                src={countryData.flag}
+                                alt="Country Flag"
+                                className="country-info-flag"
+                            />
+                        </div>
+                    )}
+
+                </div>
+            )}
+
 
             <SharedSnackbar snackbar={snackbar} setSnackbar={setSnackbar} />
         </div>
