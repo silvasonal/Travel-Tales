@@ -428,3 +428,41 @@ body {
   background-color: #149174;
 }
 
+.country-info-container {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 0.5rem;
+  background-color: #f8f9fa;
+  max-width: 40%;
+}
+
+.country-info-title {
+  margin-bottom: 1rem;
+  color: #149174;
+}
+
+.country-info-text {
+  color: #6c757d;
+}
+
+.country-info-flag {
+  width: 120px;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+.country-currency-info {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 20px;
+}
+.country-currency-item {
+  color: #6c757d;
+}
+.country-currency-label {
+  font-weight: bold;
+  margin-right: 0.5rem;
+}
