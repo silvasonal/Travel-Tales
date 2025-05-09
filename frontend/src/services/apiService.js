@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export const loginUser = async (email ,password) => {
     try {
-      const response = await axios.post('http://localhost:3000/auth/login', { email, password });
+      const response = await axios.post('http://localhost:5000/auth/login', { email, password });
       return response.data;
     } catch (error) {
       throw error;
@@ -11,7 +11,7 @@ export const loginUser = async (email ,password) => {
 
 export const registerUser = async (username,email,password) => {
     try {
-      const response = await axios.post('http://localhost:3000/auth/register', { username,email,password });
+      const response = await axios.post('http://localhost:5000/auth/register', { username,email,password });
       return response.data;
     } catch (error) {
       throw error;
@@ -20,7 +20,7 @@ export const registerUser = async (username,email,password) => {
 
 export const getPublicPosts = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/auth/publicPosts');
+      const response = await axios.get('http://localhost:5000/auth/publicPosts');
       return response.data;
     } catch (error) {
       throw error;
@@ -29,7 +29,7 @@ export const getPublicPosts = async () => {
 
 export const getFollowedPosts = async (userId, token) => {
     try {
-      const response = await axios.get(`http://localhost:3000/auth/followingPosts/${userId}`,{
+      const response = await axios.get(`http://localhost:5000/auth/followingPosts/${userId}`,{
           headers: { Authorization: `Bearer ${token}` },
       });
       return response.data;
@@ -40,7 +40,7 @@ export const getFollowedPosts = async (userId, token) => {
 
 export const likePost = async (postId, token) => {
     try {
-      const response = await axios.post(`http://localhost:3000/auth/likePost/${postId}`,{},{
+      const response = await axios.post(`http://localhost:5000/auth/likePost/${postId}`,{},{
           headers: { Authorization: `Bearer ${token}` },
       });
       return response.data;
@@ -51,7 +51,7 @@ export const likePost = async (postId, token) => {
 
 export const unlikePost = async (postId, token) => {
     try {
-      const response = await axios.post(`http://localhost:3000/auth/unLikePost/${postId}`,{},{
+      const response = await axios.post(`http://localhost:5000/auth/unLikePost/${postId}`,{},{
           headers: { Authorization: `Bearer ${token}` },
       });
       return response.data;
@@ -63,7 +63,7 @@ export const unlikePost = async (postId, token) => {
 
 export const createPost = async (title, content, country, date_of_visit, token) => {
   try {
-    const response = await axios.post('http://localhost:3000/auth/createPost', { title, content, country, date_of_visit }, {
+    const response = await axios.post('http://localhost:5000/auth/createPost', { title, content, country, date_of_visit }, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;
@@ -74,7 +74,7 @@ export const createPost = async (title, content, country, date_of_visit, token) 
 
 export const updatePost = async (postId, title, content, country, date_of_visit, token) => {
   try {
-    const response = await axios.put(`http://localhost:3000/auth/updatePost/${postId}`, { title, content, country, date_of_visit }, {
+    const response = await axios.put(`http://localhost:5000/auth/updatePost/${postId}`, { title, content, country, date_of_visit }, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;
@@ -85,7 +85,7 @@ export const updatePost = async (postId, title, content, country, date_of_visit,
 
 export const getProfile = async (userId, token) => {
   try {
-    const response = await axios.get(`http://localhost:3000/auth/profile/${userId}`, {
+    const response = await axios.get(`http://localhost:5000/auth/profile/${userId}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;
@@ -96,7 +96,7 @@ export const getProfile = async (userId, token) => {
 
 export const getPostsByUserId = async (userId, token) => {
   try {
-    const response = await axios.get(`http://localhost:3000/auth/posts/${userId}`, {
+    const response = await axios.get(`http://localhost:5000/auth/posts/${userId}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;
@@ -107,7 +107,7 @@ export const getPostsByUserId = async (userId, token) => {
 
 export const deletePost = async (postId, token) => {
   try {
-    const response = await axios.delete(`http://localhost:3000/auth/deletePost/${postId}`, {
+    const response = await axios.delete(`http://localhost:5000/auth/deletePost/${postId}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;
@@ -119,7 +119,7 @@ export const deletePost = async (postId, token) => {
 
 export const getPostByPostId = async (postId, token) => {
   try {
-    const response = await axios.get(`http://localhost:3000/auth/getPost/${postId}`, {
+    const response = await axios.get(`http://localhost:5000/auth/getPost/${postId}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;
@@ -130,7 +130,7 @@ export const getPostByPostId = async (postId, token) => {
 
 export const followUser = async (followUserId, token) => {
   try {
-    const response = await axios.post(`http://localhost:3000/auth/follow/${followUserId}`, {}, {
+    const response = await axios.post(`http://localhost:5000/auth/follow/${followUserId}`, {}, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;
@@ -141,7 +141,7 @@ export const followUser = async (followUserId, token) => {
 
 export const unfollowUser = async (followingUserId, token) => {
   try {
-    const response = await axios.delete(`http://localhost:3000/auth/unfollow/${followingUserId}`, {
+    const response = await axios.delete(`http://localhost:5000/auth/unfollow/${followingUserId}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;
@@ -153,7 +153,7 @@ export const unfollowUser = async (followingUserId, token) => {
 export const searchPosts = async ({ username, country }) => {
   try {
 
-    const response = await axios.get('http://localhost:3000/auth/posts/search', {
+    const response = await axios.get('http://localhost:5000/auth/posts/search', {
       params: { username, country }
     });
     return response.data;
@@ -164,7 +164,20 @@ export const searchPosts = async ({ username, country }) => {
 
 export const followingPostsBySearch = async (userId, token, {username, country}) => {
   try {
-    const response = await axios.get(`http://localhost:3000/auth/followingPostsBySearch/${userId}?username=${username}&country=${country}`, {
+    const response = await axios.get(`http://localhost:5000/auth/followingPostsBySearch/${userId}?username=${username}&country=${country}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export const createComment = async (postId, comment, token) => {
+
+  console.log("addnewComment", typeof addnewComment)
+  try {
+    const response = await axios.post(`http://localhost:5000/auth/createComment/${postId}`, { comment }, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;
@@ -174,4 +187,35 @@ export const followingPostsBySearch = async (userId, token, {username, country})
 }
 
 
+export const updateComment = async (commentId, comment, token) => {
+  try {
+    const response = await axios.put(`http://localhost:5000/auth/updateComment/${commentId}`, { comment }, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export const deleteComment = async (commentId, token) => {
+  try {
+    const response = await axios.delete(`http://localhost:5000/auth/deleteComment/${commentId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+
+export const getAllUsers = async () => {
+  try {
+    const response = await axios.get('http://localhost:5000/auth/users');
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
 
