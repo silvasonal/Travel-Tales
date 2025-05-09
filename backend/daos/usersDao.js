@@ -42,6 +42,15 @@ const findUserByUsername = async (username) => {
   }
 };
 
+const getAllUsers = async () => {
+  try {
+    const result = await pool.query('SELECT id,username	FROM users');
+    return result.rows;
+  } catch (error) {
+    throw new Error('Error fetching users');
+  }
+};
 
-module.exports = { createUser, findUserByEmail, findUserByUsername };
+
+module.exports = { createUser, findUserByEmail, findUserByUsername, getAllUsers };
 

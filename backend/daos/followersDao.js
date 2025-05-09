@@ -68,15 +68,50 @@ const getFollowingPostsByUserIds = async (userIds) => {
   const result = await pool.query(
     `SELECT posts.*, 
             users.username,
-            COUNT(*) FILTER (WHERE likes.type = 1) AS likes,
-            COUNT(*) FILTER (WHERE likes.type = -1) AS dislikes,
-            ARRAY_AGG(likes.user_id) FILTER (WHERE likes.type = 1) AS "likedBy", -- Aggregates all user_ids who liked the post (type = 1) into a PostgreSQL array
-            ARRAY_AGG(likes.user_id) FILTER (WHERE likes.type = -1) AS "dislikedBy"
+
+            -- Use pre-aggregated likes/dislikes from subquery "l"
+            -- COALESCE ensures that if no likes exist, we return 0 instead of NULL
+            COALESCE(l.likes, 0) AS likes,
+            COALESCE(l.dislikes, 0) AS dislikes,
+
+            -- COALESCE ensures an empty array is returned instead of NULL for likedBy/dislikedBy
+            COALESCE(l.likedBy, ARRAY[]::INTEGER[]) AS "likedBy",
+            COALESCE(l.dislikedBy, ARRAY[]::INTEGER[]) AS "dislikedBy",
+
+            -- COALESCE ensures comments is an empty array if there are no comments
+            COALESCE(c.comments, '[]') AS comments
+           
      FROM posts
      JOIN users ON posts.user_id = users.id
-     LEFT JOIN likes ON posts.id = likes.post_id
+
+     -- Subquery to pre-aggregate likes and prevent row duplication
+      LEFT JOIN (
+        SELECT 
+          post_id,
+          COUNT(*) FILTER (WHERE type = 1) AS likes,
+          COUNT(*) FILTER (WHERE type = -1) AS dislikes,
+          ARRAY_AGG(user_id) FILTER (WHERE type = 1) AS likedBy,
+          ARRAY_AGG(user_id) FILTER (WHERE type = -1) AS dislikedBy
+        FROM likes
+        GROUP BY post_id
+      ) l ON posts.id = l.post_id
+
+      -- Subquery to aggregate comments per post into a JSON array
+        LEFT JOIN (
+          SELECT 
+            post_id,
+            JSON_AGG(DISTINCT jsonb_build_object(
+              'commentId', id,
+              'comment', comment,
+              'userId', user_id,
+              'postId', post_id
+            )) AS comments
+          FROM comments
+          GROUP BY post_id
+        ) c ON posts.id = c.post_id
+
      WHERE posts.user_id IN (${placeholders})
-     GROUP BY posts.id, users.username`,
+     `,
     userIds
   );
   return result.rows;
@@ -88,15 +123,48 @@ const searchByFollowingPosts = async (userIds, username, country) => {
   try{
   let query = `
     SELECT posts.*, 
-           users.username, 
-           COUNT(*) FILTER (WHERE likes.type = 1) AS likes,
-           COUNT(*) FILTER (WHERE likes.type = -1) AS dislikes,
-           ARRAY_AGG(likes.user_id) FILTER (WHERE likes.type = 1) AS "likedBy", 
-           ARRAY_AGG(likes.user_id) FILTER (WHERE likes.type = -1) AS "dislikedBy"
-    FROM posts
-    JOIN users ON posts.user_id = users.id
-    LEFT JOIN likes ON posts.id = likes.post_id`;
+          users.username, 
+          -- Use pre-aggregated likes/dislikes from subquery "l"
+          -- COALESCE ensures that if no likes exist, we return 0 instead of NULL
+          COALESCE(l.likes, 0) AS likes,
+          COALESCE(l.dislikes, 0) AS dislikes,
 
+          -- COALESCE ensures an empty array is returned instead of NULL for likedBy/dislikedBy
+          COALESCE(l.likedBy, ARRAY[]::INTEGER[]) AS "likedBy",
+          COALESCE(l.dislikedBy, ARRAY[]::INTEGER[]) AS "dislikedBy",
+
+          -- COALESCE ensures comments is an empty array if there are no comments
+          COALESCE(c.comments, '[]') AS comments
+        FROM posts
+        JOIN users ON posts.user_id = users.id
+
+           
+        -- Subquery to pre-aggregate likes and prevent row duplication
+        LEFT JOIN (
+        SELECT 
+          post_id,
+          COUNT(*) FILTER (WHERE type = 1) AS likes,
+          COUNT(*) FILTER (WHERE type = -1) AS dislikes,
+          ARRAY_AGG(user_id) FILTER (WHERE type = 1) AS likedBy,
+          ARRAY_AGG(user_id) FILTER (WHERE type = -1) AS dislikedBy
+        FROM likes
+        GROUP BY post_id
+      ) l ON posts.id = l.post_id
+
+      -- Subquery to aggregate comments per post into a JSON array
+        LEFT JOIN (
+          SELECT 
+            post_id,
+            JSON_AGG(DISTINCT jsonb_build_object(
+              'commentId', id,
+              'comment', comment,
+              'userId', user_id,
+              'postId', post_id
+            )) AS comments
+          FROM comments
+          GROUP BY post_id
+        ) c ON posts.id = c.post_id `;
+          
   let queryParams = [...userIds];
   let conditions = []; 
 
@@ -112,9 +180,6 @@ const searchByFollowingPosts = async (userIds, username, country) => {
 
   if (conditions.length > 0) {
     query += ` WHERE posts.user_id IN (${placeholders}) AND ` + conditions.join(' AND ');  }
-
-  query += `
-    GROUP BY posts.id, users.username`;
 
     const result = await pool.query(query, queryParams);
     return result.rows;
