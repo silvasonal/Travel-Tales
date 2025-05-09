@@ -34,6 +34,13 @@ body {
   text-align: left;
 }
 
+.form-label{
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+  text-align: left;
+}
+
 .input-group input {
   padding: 10px;
   border: 1px solid #ccc;
@@ -121,7 +128,7 @@ body {
 
 .posts-container {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);  /* This ensures 2 items per row */
+  grid-template-columns: repeat(3, 2fr);  /* This ensures 2 items per row */
   gap: 1.5rem;
   padding: 1rem;
   border-radius: 12px;
@@ -135,9 +142,10 @@ body {
 
 .post-card {
   position: relative;
-  padding: 16px;
+  padding: 20px;
   border: 1px solid #ccc;
   border-radius: 8px;
+  height: 400px;
 }
 
 .post-actions {
@@ -377,9 +385,46 @@ body {
 }
 
 
+.comment-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
 
+.comment-text {
+  font-size: 16px;
+  color: #333;
+  margin-right: 15px; 
+  flex-grow: 1;
+  line-height: 1.4;
+}
 
+.username {
+  font-size: 14px;
+  color: #149174; 
+  font-weight: 600; 
+  margin-left: 5px;
+}
 
+.postModal-actions-container {
+  display: flex;
+  justify-content: flex-end; 
+  gap: 10px;  
+  margin-top: 10px;
+  margin-bottom: 10px;  
+}
 
+.postModal-updateButton {
+  background-color: #16a085;
+  color: white;
+  padding: 6px 14px;
+  font-size: 14px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
 
+.postModal-updateButton:hover {
+  background-color: #149174;
+}
 

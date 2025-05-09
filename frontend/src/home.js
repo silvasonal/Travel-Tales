@@ -22,7 +22,7 @@ const Home = () => {
   const searchusername = queryParams.get('username');
   const searchcountry = queryParams.get('country');
 
-  const postsPerPage = 4; // Number of posts per page
+  const postsPerPage = 3; // Number of posts per page
   const totalPages = Math.ceil(posts.length / postsPerPage); // Total number of pages based on posts length
   const indexOfLastPost = currentPage * postsPerPage; // Index of the last post on the current page
   const indexOfFirstPost = indexOfLastPost - postsPerPage; // Index of the first post on the current page
