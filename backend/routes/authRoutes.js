@@ -4,6 +4,7 @@ const lodingInfoModel = require('../models/loginInfoModel');
 const blogPostsModel = require('../models/blogPostsModel');
 const followersModel = require('../models/followersModel');
 const likePostModel = require('../models/likePostModel');
+const commentsModel = require('../models/commentsModel');
 const authenticateToken = require('../middleware/authMiddleware');
 const router = express.Router();
 
@@ -29,6 +30,12 @@ router.get('/followingPostsBySearch/:id', authenticateToken, followersModel.getF
 router.post('/likePost/:postId', authenticateToken, likePostModel.likePost);
 router.post('/unLikePost/:postId', authenticateToken, likePostModel.unlikePost);
 
+router.post('/createComment/:postId', authenticateToken, commentsModel.createComment);
+router.put('/updateComment/:comment_id', authenticateToken, commentsModel.updateComment);    
+router.delete('/deleteComment/:comment_id', authenticateToken, commentsModel.deleteComment);
+router.get('/getCommentsByUserId', authenticateToken, commentsModel.getCommentsByUserId);
+
+router.get('/users', useModel.getAllUsers);
 
 
 module.exports = router;

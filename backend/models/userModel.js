@@ -42,6 +42,18 @@ const registerUser = async (req, res) => {
   }
 };
 
+const getAllUsers = async (req, res) => {
+  try {
+    const users = await usersDao.getAllUsers();
+    return res.status(200).json(users);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    return res.status(500).json({ error: 'Error fetching users' });
+  }
+};
+
+
 module.exports = {
-  registerUser
+  registerUser,
+  getAllUsers
 };
