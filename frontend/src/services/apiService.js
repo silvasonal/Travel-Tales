@@ -175,7 +175,6 @@ export const followingPostsBySearch = async (userId, token, {username, country})
 
 export const createComment = async (postId, comment, token) => {
 
-  console.log("addnewComment", typeof addnewComment)
   try {
     const response = await axios.post(`http://localhost:5000/auth/createComment/${postId}`, { comment }, {
       headers: { Authorization: `Bearer ${token}` },
