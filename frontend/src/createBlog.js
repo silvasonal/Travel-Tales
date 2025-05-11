@@ -7,7 +7,6 @@ import SharedSnackbar from './SharedComponents/SharedSnackbar';
 import { useParams } from 'react-router-dom';
 import Select from 'react-select';
 
-
 const CreateBlog = () => {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
@@ -234,8 +233,6 @@ const CreateBlog = () => {
 
                 </div>
             )}
-
-
             <SharedSnackbar snackbar={snackbar} setSnackbar={setSnackbar} />
         </div>
     );

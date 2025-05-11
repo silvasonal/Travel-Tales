@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from 'react';
+import  { useEffect, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import TextInput from './SharedComponents/TextInput';
 import SharedSnackbar from './SharedComponents/SharedSnackbar';
@@ -116,8 +116,6 @@ const PostModal = ({ show, handleClose, post, userId }) => {
         }
     }
 
-
-
     const showCommentUserName = (userId) => {
         const user = users.find(user => user.id === userId); 
         if (user) {
@@ -152,7 +150,6 @@ const PostModal = ({ show, handleClose, post, userId }) => {
                             {existingComment ? 'Update' : 'Add'}
                         </button>
                     </div>
-
 
                     <div className="comments-list">
                         {showComments.length > 0 ? (
