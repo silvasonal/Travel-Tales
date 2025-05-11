@@ -219,3 +219,11 @@ export const getAllUsers = async () => {
   }
 }
 
+export const resetPassword = async (email, newPassword) => {
+  try {
+    const response = await axios.post('http://localhost:5000/auth/passwordReset', { email, newPassword });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}

@@ -6,13 +6,11 @@ import Register from './Register';
 import Profile from './profile';
 import Layout from './layout';
 import CreateBlog from './createBlog';
+import ForgotPassword from './ForgotPassword';
 
 const App = () => {
   const savedToken = localStorage.getItem('token');
   const [token, setToken] = useState(savedToken); 
-  
-  console.log(token);
-
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -29,6 +27,7 @@ const App = () => {
             {/* Public Routes */}
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login setToken={setToken} />} />
+            <Route path="/forgotPassword" element={<ForgotPassword />} />
         
             {/* Shared Layout */}
             <Route path="/" element={<Layout token={token} handleLogout={handleLogout} />}>
@@ -44,11 +43,7 @@ const App = () => {
               <Route path="/update/:postId?" element={ <PrivateRoute> <CreateBlog />  </PrivateRoute>} />
               </Route>
 
-
             <Route path="*" element={<Navigate to="/home" />} />
-            
-          
-        
       </Routes>
     </Router>
   );

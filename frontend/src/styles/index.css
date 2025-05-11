@@ -65,6 +65,22 @@ body {
   background-color: #149174;
 }
 
+.forgot-password {
+  text-align: right;
+  font-size: 0.9rem;
+  margin-top: -10px;
+  margin-bottom: 10px;
+}
+
+.forgot-password a {
+  color: #007bff;
+}
+
+.forgot-password a:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
 
 /* Sidebar styles */
 
@@ -450,6 +466,7 @@ body {
   width: 120px;
   border-radius: 4px;
   margin-bottom: 1rem;
+  outline: #6c757d 1px solid;
 }
 
 .country-currency-info {

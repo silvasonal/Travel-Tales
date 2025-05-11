@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getProfile, getPostsByUserId, likePost, unlikePost, deletePost, followUser, unfollowUser } from './services/apiService';
 import PostCard from './SharedComponents/PostCard';
 import { jwtDecode } from 'jwt-decode';

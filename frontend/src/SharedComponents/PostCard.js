@@ -43,8 +43,6 @@ const PostCard = ({ post, userId, onLike, onDislike, onDelete, onUpdate }) => {
 
   const handleClose = () => setShowModal(false);
 
-
-
   return (
     <div className="post-card">
 
@@ -101,8 +99,6 @@ const PostCard = ({ post, userId, onLike, onDislike, onDelete, onUpdate }) => {
             userId={userId}
           />
       </div>
-
-
     </div>
   );
 };

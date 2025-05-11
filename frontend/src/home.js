@@ -187,7 +187,6 @@ const Home = () => {
         </div>
        )}
 
-
       <SharedSnackbar snackbar={snackbar} setSnackbar={setSnackbar} />
     </div>
   );
