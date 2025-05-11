@@ -132,6 +132,7 @@ const PostModal = ({ show, handleClose, post, userId }) => {
                     <Modal.Title>Comments</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
+                    {token && (
                     <TextInput
                         id="comment"
                         label="Comment"
@@ -140,7 +141,9 @@ const PostModal = ({ show, handleClose, post, userId }) => {
                         onChange={(e) => setAddNewComment(e.target.value)}
                         placeholder="Add a comment..."
                     />
+                    )}
 
+                    {token && (
                     <div className="postModal-actions-container">
                         <span onClick={handleDeleteComment} className="actions-button delete-icon" title="Delete Comment">
                             <FaTrashAlt />
@@ -150,6 +153,7 @@ const PostModal = ({ show, handleClose, post, userId }) => {
                             {existingComment ? 'Update' : 'Add'}
                         </button>
                     </div>
+                    )}
 
                     <div className="comments-list">
                         {showComments.length > 0 ? (
