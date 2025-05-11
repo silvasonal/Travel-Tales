@@ -52,8 +52,39 @@ const getAllUsers = async (req, res) => {
   }
 };
 
+const passwordReset = async (req, res) => {
+  const { email, newPassword } = req.body;
+
+  // Validate input
+  if (!email) {
+    return res.status(400).json({ error: 'Email is required' });
+  }
+  if (!newPassword) {
+    return res.status(400).json({ error: 'New password is required' });
+  }
+
+  try {
+    // Hash new password and update user
+    const hashedPassword = await bcryptUtils.hashPassword(newPassword);
+    const user = await usersDao.passwordReset(email, hashedPassword);
+
+    if (!user) {
+      return res.status(404).json({ error: 'User with email not found' });
+    }
+
+    return res.status(200).json({
+      message: 'Password reset successfully',
+      user
+    });
+
+  } catch (error) {
+    console.error('Error resetting password:', error);
+    return res.status(500).json({ error: 'Error resetting password' });
+  }
+};
 
 module.exports = {
   registerUser,
-  getAllUsers
+  getAllUsers,
+  passwordReset
 };

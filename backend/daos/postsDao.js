@@ -240,5 +240,4 @@ const getPostsById = async (userId) => {
 };
 
 
-
 module.exports = { createBlogPost, updateBlogPost, deleteBlogPost,getPostByPostId, getAllPublicPosts, searchBy, getPostsById};

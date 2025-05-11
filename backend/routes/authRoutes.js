@@ -19,7 +19,6 @@ router.get('/publicPosts', blogPostsModel.getPublicPosts);
 router.get('/posts/search', blogPostsModel.searchPosts);
 router.get('/posts/:userId',authenticateToken, blogPostsModel.getUserPostsById);
 
-
 router.post('/follow/:id', authenticateToken, followersModel.followUser);
 router.delete('/unfollow/:id', authenticateToken, followersModel.unfollowUser);
 router.get('/profile/:id', authenticateToken ,followersModel.getUserProfile);
@@ -36,6 +35,6 @@ router.delete('/deleteComment/:comment_id', authenticateToken, commentsModel.del
 router.get('/getCommentsByUserId', authenticateToken, commentsModel.getCommentsByUserId);
 
 router.get('/users', useModel.getAllUsers);
-
+router.post('/passwordReset', useModel.passwordReset);
 
 module.exports = router;

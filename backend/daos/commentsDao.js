@@ -1,6 +1,5 @@
 const pool = require('../config/db');
 
-
 const createComment = async (user_id, post_id, comment) => {
   try {
     const result = await pool.query(
@@ -57,8 +56,6 @@ const getCommentsByUserId = async (user_id) => {
     throw new Error('Error fetching comments by user ID');
   }
 }
-
-
 
 module.exports = {
   createComment,
