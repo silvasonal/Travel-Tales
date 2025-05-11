@@ -1,6 +1,5 @@
 const pool = require('../config/db');
 
-// Create a new user
 const createUser = async (username, email, password) => {
   try {
     const result = await pool.query(
@@ -15,7 +14,6 @@ const createUser = async (username, email, password) => {
 };
 
 
-// Find a user by their email
 const findUserByEmail = async (email) => {
   try {
     const result = await pool.query(
@@ -51,6 +49,18 @@ const getAllUsers = async () => {
   }
 };
 
+const passwordReset = async (email, newPassword) => {
+  try {
+    const result = await pool.query(
+      'UPDATE users SET password = $1, created_at = NOW() WHERE email = $2 RETURNING *',
+      [newPassword, email]
+    );
+    return result.rows[0];
+  } catch (error) {
+    throw new Error('Error updating password');
+  }
+};
 
-module.exports = { createUser, findUserByEmail, findUserByUsername, getAllUsers };
+
+module.exports = { createUser, findUserByEmail, findUserByUsername, getAllUsers, passwordReset };
 
