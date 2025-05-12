@@ -32,7 +32,6 @@ router.post('/unLikePost/:postId', authenticateToken, likePostModel.unlikePost);
 router.post('/createComment/:postId', authenticateToken, commentsModel.createComment);
 router.put('/updateComment/:comment_id', authenticateToken, commentsModel.updateComment);    
 router.delete('/deleteComment/:comment_id', authenticateToken, commentsModel.deleteComment);
-router.get('/getCommentsByUserId', authenticateToken, commentsModel.getCommentsByUserId);
 
 router.get('/users', useModel.getAllUsers);
 router.post('/passwordReset', useModel.passwordReset);

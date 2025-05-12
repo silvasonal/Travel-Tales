@@ -44,22 +44,8 @@ const deleteComment = async (comment_id) => {
   }
 }
 
-const getCommentsByUserId = async (user_id) => {
-  try {
-    const result = await pool.query(
-      'SELECT * FROM comments WHERE user_id = $1',
-      [user_id]
-    );
-    return result.rows;
-  } catch (error) {
-    console.error('Error in getCommentsByUserId:', error);
-    throw new Error('Error fetching comments by user ID');
-  }
-}
-
 module.exports = {
   createComment,
   updateComment,
   deleteComment,
-  getCommentsByUserId
 }
