@@ -63,20 +63,8 @@ const deleteComment = async (req, res) => {
   }
 }
 
-const getCommentsByUserId = async (req, res) => {
-  try {
-    const user_id = req.user.userId;
-    const comments = await commentsDAO.getCommentsByUserId(user_id);
-    res.status(200).json(comments);
-  } catch (error) {
-    console.error('Error fetching comments by user ID:', error);
-    res.status(500).json({ error: 'Error fetching comments' });
-  }
-}
-
 module.exports = {
   createComment,
   updateComment,
   deleteComment,
-  getCommentsByUserId
 };
