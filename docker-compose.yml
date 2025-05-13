@@ -34,3 +34,8 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123
       POSTGRES_DB: Coursework
+
+  country-service:
+    build: ./country-service
+    ports:
+      - "7000:7000"

@@ -226,3 +226,12 @@ export const resetPassword = async (email, newPassword) => {
     throw error;
   }
 }
+
+export const getCountryData = async (countryCode) => {
+  try {
+    const response = await axios.get(`http://localhost:7000/country/${countryCode}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
