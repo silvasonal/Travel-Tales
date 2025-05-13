@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import TextInput from './SharedComponents/TextInput';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { createPost, getPostByPostId, updatePost } from './services/apiService';
+import { createPost, getPostByPostId, updatePost,getCountryData } from './services/apiService';
 import SharedSnackbar from './SharedComponents/SharedSnackbar';
 import { useParams } from 'react-router-dom';
 import Select from 'react-select';
@@ -21,32 +21,17 @@ const CreateBlog = () => {
     const token = localStorage.getItem('token');
 
     useEffect(() => {
-        const getCountryData = async () => {
+        const fetchCountryData = async () => {
             if (!country) return;
 
             try {
-                const response = await axios.get('https://restcountries.com/v3.1/alpha/' + country);
-                const countryInfo = response.data[0];
-
-                const countryData = {
-                    capital: countryInfo.capital ? countryInfo.capital[0] : 'N/A',
-                    flag: countryInfo.flags?.svg || '',
-                    currency: countryInfo.currencies
-                        ? Object.keys(countryInfo.currencies).map(curr => ({
-                            code: curr,
-                            name: countryInfo.currencies[curr].name,
-                            symbol: countryInfo.currencies[curr].symbol,
-                        }))
-                        : [],
-                };
-                setCountryData(countryData);
-                return countryData;
+                const response = await getCountryData(country);
+                setCountryData(response);
             } catch (error) {
                 console.error('Error fetching country data:', error);
-                return null;
             }
         };
-        getCountryData();
+        fetchCountryData();
     }, [country]);
 
 
