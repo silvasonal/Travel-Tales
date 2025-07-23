@@ -1,10 +1,10 @@
 const pool = require('../config/db');
 
-const createBlogPost = async (user_id, title, content, country, date_of_visit) => {
+const createBlogPost = async (user_id, title, content, country, date_of_visit,imageUrl) => {
   try {
     const result = await pool.query(
-      'INSERT INTO posts (user_id, title, content, country, date_of_visit) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-      [user_id, title, content, country, date_of_visit]
+      'INSERT INTO posts (user_id, title, content, country, date_of_visit, image) VALUES ($1, $2, $3, $4, $5 ,$6) RETURNING *',
+      [user_id, title, content, country, date_of_visit, imageUrl]
     );
     return result.rows[0];
 
@@ -125,7 +125,6 @@ const getAllPublicPosts = async () => {
 
 const searchBy = async (username, country) => {
   try {
-    // Start building base query with necessary joins to aggregated subqueries
     let query = `
       SELECT 
         posts.*,
@@ -238,6 +237,7 @@ const getPostsById = async (userId) => {
     throw new Error('Error fetching public posts');
   }
 };
+
 
 
 module.exports = { createBlogPost, updateBlogPost, deleteBlogPost,getPostByPostId, getAllPublicPosts, searchBy, getPostsById};

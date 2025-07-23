@@ -1,11 +1,27 @@
 const blogPostsDAO = require('../daos/postsDao');
+const { s3, bucketName } = require('../models/s3Client');
+
 
 const createPost = async (req, res) => {
   try {
     const { title, content, country, date_of_visit } = req.body;
     const user_id = req.user.userId;
+    let imageUrl = null;
 
-    const post = await blogPostsDAO.createBlogPost(user_id, title, content, country, date_of_visit);
+   if (req.file) {
+      // Upload image to S3 only if file is provided
+      const params = {
+        Bucket: bucketName,
+        Key: `${Date.now()}-${req.file.originalname}`,
+        Body: req.file.buffer,
+        ContentType: req.file.mimetype,
+      };
+
+      const uploadResult = await s3.upload(params).promise();
+      imageUrl = uploadResult.Location;
+    } 
+
+    const post = await blogPostsDAO.createBlogPost(user_id, title, content, country, date_of_visit,imageUrl);
     res.status(201).json({
       message: 'Post created successfully',
       post: {
@@ -14,6 +30,7 @@ const createPost = async (req, res) => {
         content: post.content,
         country: post.country,
         date_of_visit: post.date_of_visit,
+        imageUrl: post.image,
       },
     });
   } catch (error) {

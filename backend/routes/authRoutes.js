@@ -1,16 +1,24 @@
 const express = require('express');
+const multer = require('multer');
 const useModel = require('../models/userModel');
 const lodingInfoModel = require('../models/loginInfoModel');
 const blogPostsModel = require('../models/blogPostsModel');
 const followersModel = require('../models/followersModel');
 const likePostModel = require('../models/likePostModel');
 const commentsModel = require('../models/commentsModel');
+const { handleFileUpload } = require('../models/s3Client');
 const authenticateToken = require('../middleware/authMiddleware');
 const router = express.Router();
 
+// Multer config
+const storage = multer.memoryStorage(); // Use memory, not disk
+const upload = multer({ storage });
+
 router.post('/register', useModel.registerUser);
 router.post('/login', lodingInfoModel.loginUser);
-router.post('/createPost', authenticateToken, blogPostsModel.createPost);
+// router.post('/createPost', authenticateToken, blogPostsModel.createPost);
+router.post('/createPost', authenticateToken, upload.single('image'), blogPostsModel.createPost);
+
 router.put('/updatePost/:postId', authenticateToken, blogPostsModel.updatePost);
 router.delete('/deletePost/:postId', authenticateToken, blogPostsModel.deletePost);
 router.get('/getPost/:postId', authenticateToken, blogPostsModel.getPostByPostId);
@@ -35,5 +43,7 @@ router.delete('/deleteComment/:comment_id', authenticateToken, commentsModel.del
 
 router.get('/users', useModel.getAllUsers);
 router.post('/passwordReset', useModel.passwordReset);
+
+
 
 module.exports = router;
