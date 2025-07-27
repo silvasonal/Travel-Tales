@@ -483,3 +483,21 @@ body {
   font-weight: bold;
   margin-right: 0.5rem;
 }
+
+
+
+.download-nav-icon {
+  cursor: pointer;
+  color: #16a085;
+  font-size: 24px;
+  transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.download-nav-icon:hover {
+  color: #149174;
+  transform: scale(1.1);
+}
+
+
+
+

@@ -61,10 +61,22 @@ export const unlikePost = async (postId, token) => {
 }
 
 
-export const createPost = async (title, content, country, date_of_visit, token) => {
+export const createPost = async (title, content, country, date_of_visit, token, image) => {
   try {
-    const response = await axios.post('http://localhost:5000/auth/createPost', { title, content, country, date_of_visit }, {
-      headers: { Authorization: `Bearer ${token}` },
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('content', content);
+    formData.append('country', country);
+    formData.append('date_of_visit', date_of_visit);
+    if (image) {
+      formData.append('image', image);
+    }
+
+    const response = await axios.post('http://localhost:5000/auth/createPost', formData, {
+       headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        },
     });
     return response.data;
   } catch (error) {
